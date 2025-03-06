@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.6.1
+  sdk: ^3.5.3
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -80,16 +80,24 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Schyler
+    - family: Imprima
       fonts:
-        - asset: fonts/Schyler-Regular.ttf
+        - asset: fonts/Imprima-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
+    - family: Ingrid
+      fonts:
+        - asset: fonts/IngridDarling-Regular.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-  #
+
+    - family: Inria
+      fonts:
+        - asset: fonts/InriaSerif-Regular.ttf
+
+    - family: Italiana
+      fonts:
+        - asset: fonts/Italiana-Regular.ttf
+  
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
