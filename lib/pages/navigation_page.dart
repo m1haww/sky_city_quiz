@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sky_city_quiz/pages/Settings_page.dart';
 import 'package:sky_city_quiz/pages/home_page.dart';
 import 'package:sky_city_quiz/pages/quiz_page.dart';
 import 'package:sky_city_quiz/pages/shopping_page.dart';
+import 'package:sky_city_quiz/pages/start_quiz_page.dart';
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key});
@@ -15,11 +17,7 @@ class _NavigationPageState extends State<NavigationPage> {
   int _select = 0;
   final Color _selected = Color(0xffFFB22C);
 
-  final List<Widget> _pages = [
-    QuizPage(sectionIndex: 0),
-    ShoppingPage(),
-    HomePage()
-  ];
+  final List<Widget> _pages = [StartQuizPage(), ShoppingPage(), SettingsPage()];
 
   @override
   Widget build(BuildContext context) {

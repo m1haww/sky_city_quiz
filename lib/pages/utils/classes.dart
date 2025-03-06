@@ -77,7 +77,7 @@ List<Quiz> quiz = [
           "Shopping centers",
           "Underground parking"
         ],
-        "answer": "Schools, Hospitals, Shopping centers, Underground parking"
+        "answer": "Schools"
       },
       {
         "question":

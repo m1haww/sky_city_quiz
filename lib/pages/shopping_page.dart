@@ -57,6 +57,23 @@ class _ShoppingPageState extends State<ShoppingPage> {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            leading: Consumer<MyProvider>(
+              builder: (context, provider, child) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.monetization_on, color: Colors.yellow),
+                      SizedBox(width: 5),
+                      Text(
+                        provider.coins.toString(),
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
             actions: [
               GestureDetector(
                   onTap: () {
