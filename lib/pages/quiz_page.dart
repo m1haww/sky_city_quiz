@@ -23,7 +23,7 @@ class _QuizPageState extends State<QuizPage> {
 
     final question = quiz[widget.sectionIndex].questions[questionIndex];
 
-    if (option == question['correctAnswer']) {
+    if (option == question['answer']) {
       print("🎯 Răspuns corect! Adăugăm monede.");
       Provider.of<MyProvider>(context, listen: false).addCoins(50);
     } else {
