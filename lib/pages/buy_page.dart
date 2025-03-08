@@ -15,7 +15,14 @@ class _BuyPageState extends State<BuyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Purchase Successful"),
+        title: Text(
+          "Purchase Successful",
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w900,
+              fontSize: 40,
+              fontFamily: "Ingrid"),
+        ),
         centerTitle: true,
       ),
       body: Center(

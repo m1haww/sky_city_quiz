@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sky_city_quiz/pages/utils/classes.dart';
 
 class MyProvider extends ChangeNotifier {
   int _coins = 0; // Start with 0 coins
@@ -9,8 +10,7 @@ class MyProvider extends ChangeNotifier {
 
   void addCoins(int amount) {
     _coins += amount;
-    print(
-        "✅ Coins added: $amount | Total coins: $_coins"); // Vezi dacă funcționează
+    print("✅ Coins added: $amount | Total coins: $_coins"); // Check if it works
     notifyListeners();
   }
 
@@ -21,14 +21,18 @@ class MyProvider extends ChangeNotifier {
     }
   }
 
-  bool buyItem(Map<String, dynamic> item) {
-    final int price = int.parse(item['price']); // Convert price to int
-    if (_coins >= price) {
-      _coins -= price;
-      _purchased.add(item);
-      notifyListeners();
-      return true;
+  // Update buyItem method to use _coins and add the purchased item
+  void buyItem(Shopping item) {
+    if (_coins >= item.price) {
+      _coins -= item.price; // Deduct coins
+      _purchased.add({
+        'image': item.image,
+        'title': item.title,
+        'price': item.price,
+      }); // Add the purchased item to the list
+      notifyListeners(); // Notify listeners for UI updates
+    } else {
+      print("Not enough coins!"); // Optional: handle not enough coins
     }
-    return false;
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sky_city_quiz/pages/my_provider.dart'; // Assuming you have this provider
-import 'package:sky_city_quiz/pages/utils/classes.dart'; // Assuming quiz data is here
+import 'package:sky_city_quiz/pages/utils/classes.dart';
+import 'package:sky_city_quiz/pages/utils/containers.dart'; // Assuming quiz data is here
 
 class QuizPage extends StatefulWidget {
   final int sectionIndex;
@@ -31,7 +32,6 @@ class _QuizPageState extends State<QuizPage> {
     }
   }
 
-  // This method handles the logic when the user presses "Next" or "Finish"
   void _onNextPressed() {
     final provider = Provider.of<MyProvider>(context, listen: false);
     final quizSection = quiz[widget.sectionIndex];
@@ -52,7 +52,15 @@ class _QuizPageState extends State<QuizPage> {
 
     provider.addCoins(coinsEarned);
 
+    // Show the total coins in a ScaffoldMessenger
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Total Coins: ${provider.coins}'),
+      ),
+    );
+
     if (widget.sectionIndex < quiz.length - 1) {
+      // Navigate to the next quiz section
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -60,25 +68,75 @@ class _QuizPageState extends State<QuizPage> {
         ),
       );
     } else {
+      // If quiz is finished, show the finish dialog
       _showFinishDialog(coinsEarned, provider);
     }
   }
 
   void _showFinishDialog(int coinsEarned, MyProvider provider) {
+    final height = MediaQuery.of(context).size.height;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Quiz Completed!"),
-          content: Text(
-              "You earned $coinsEarned coins.\nTotal Coins: ${provider.coins}"),
+          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: const Text(
+            "Quiz Completed!",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, fontFamily: "Ingrid"),
+          ),
+          content: SizedBox(
+            height: height * 0.05, // Smaller height
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image(image: AssetImage("images/Group 19.png"), height: 25),
+                    buildWidth(context, 0.01),
+                    Text(
+                      "${provider.coins}",
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: "Imprima",
+                          color: Colors.black),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actionsAlignment: MainAxisAlignment.center,
           actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("OK"),
+            SizedBox(
+              width: 100, // Make button smaller
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                ),
+                child: Text(
+                  'Okay',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14, // Smaller font
+                    fontFamily: "Imprima",
+                  ),
+                ),
+              ),
             ),
           ],
         );
@@ -91,59 +149,87 @@ class _QuizPageState extends State<QuizPage> {
     final quizSection = quiz[widget.sectionIndex];
     final questions = quizSection.questions;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(quizSection.section),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ListView.separated(
-                itemCount: questions.length,
-                separatorBuilder: (_, __) => const Divider(),
-                itemBuilder: (context, index) {
-                  final question = questions[index];
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        question['question'],
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      ListTileTheme(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Column(
-                          children: question['options'].map<Widget>((option) {
-                            final isSelected = selectedAnswers[index] == option;
-                            return ListTile(
-                              title: Text(option),
-                              tileColor: isSelected ? Colors.amber : null,
-                              onTap: () => _onOptionSelected(index, option),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                    ],
-                  );
-                },
-              ),
+    return Stack(
+      children: [
+        buildBackground(context),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.transparent,
+            centerTitle: true,
+            title: Text(
+              quizSection.section,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 40,
+                  fontFamily: "Ingrid"),
             ),
-            ElevatedButton(
-              onPressed: _onNextPressed,
-              child: Text(
-                  widget.sectionIndex < quiz.length - 1 ? "Next" : "Finish"),
+            elevation: 0,
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: ListView.separated(
+                    itemCount: questions.length,
+                    separatorBuilder: (_, __) => const Divider(),
+                    itemBuilder: (context, index) {
+                      final question = questions[index];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            question['question'],
+                            style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey),
+                          ),
+                          ListTileTheme(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Column(
+                              children:
+                                  question['options'].map<Widget>((option) {
+                                final isSelected =
+                                    selectedAnswers[index] == option;
+                                return ListTile(
+                                  title: Text(
+                                    option,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontFamily: "Imprima"),
+                                  ),
+                                  tileColor:
+                                      isSelected ? Color(0xffFFB22C) : null,
+                                  onTap: () => _onOptionSelected(index, option),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: _onNextPressed,
+                  child: Text(
+                    widget.sectionIndex < quiz.length - 1 ? "Next" : "Finish",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

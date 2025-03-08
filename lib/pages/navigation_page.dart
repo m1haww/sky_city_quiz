@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sky_city_quiz/pages/Settings_page.dart';
-import 'package:sky_city_quiz/pages/home_page.dart';
 import 'package:sky_city_quiz/pages/quiz_page.dart';
 import 'package:sky_city_quiz/pages/shopping_page.dart';
 import 'package:sky_city_quiz/pages/start_quiz_page.dart';

@@ -8,7 +8,7 @@ class Quiz {
 
 List<Quiz> quiz = [
   Quiz(
-    section: "SECTION 1: GENERAL KNOWLEDGE",
+    section: "Section 1: General Knowledge",
     title: "What is the official name of Sky City in Changsha?",
     questions: [
       {
@@ -50,7 +50,7 @@ List<Quiz> quiz = [
     ],
   ),
   Quiz(
-    section: "SECTION 2: Design & Features",
+    section: "Section 2: Design & Features",
     title: "Design & Features of Sky City",
     questions: [
       {
@@ -104,7 +104,7 @@ List<Quiz> quiz = [
     ],
   ),
   Quiz(
-    section: "SECTION 3: Impact & Legacy",
+    section: "Section 3: Impact & Legacy",
     title: "Impact & Legacy of Sky City",
     questions: [
       {
@@ -173,5 +173,5 @@ List<Shopping> shoppingItems = [
   Shopping(
       image: "images/apartments-exclusive.jpg",
       title: "Exclusive apartment",
-      price: 2500000),
+      price: 25000),
 ];

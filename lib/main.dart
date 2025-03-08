@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sky_city_quiz/pages/home_page.dart';
 import 'package:sky_city_quiz/pages/my_provider.dart';
 import 'package:sky_city_quiz/pages/splash_screeen.dart';
 

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
+import 'package:sky_city_quiz/pages/utils/containers.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // MyProvider class (already provided)
 class MyProvider extends ChangeNotifier {
@@ -33,15 +36,6 @@ class MyProvider extends ChangeNotifier {
   }
 }
 
-void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => MyProvider(),
-      child: QuizApp(),
-    ),
-  );
-}
-
 class QuizApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -53,90 +47,132 @@ class QuizApp extends StatelessWidget {
 
 // SettingsPage with containers for Privacy Policy, Terms of Service, and Rate Us
 class SettingsPage extends StatelessWidget {
+  final Uri _url = Uri.parse(
+      'https://www.termsfeed.com/live/edd09286-675f-43f6-9f56-26ea4139b543');
+
+  Future<void> _launchUrl() async {
+    if (await canLaunchUrl(_url)) {
+      await launchUrl(_url, mode: LaunchMode.externalApplication);
+    } else {
+      throw Exception('Could not launch $_url');
+    }
+  }
+
+  final InAppReview inAppReview = InAppReview.instance;
+
+  // Function to handle "Rate Us" action
+  Future<void> _rateApp() async {
+    if (await inAppReview.isAvailable()) {
+      inAppReview.requestReview(); // In-app review request
+    } else {
+      // If in-app review is not available, open the store listing
+      inAppReview.openStoreListing(
+          appStoreId: 'YOUR_APP_STORE_ID'); // Replace with your App Store ID
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Settings'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Privacy Policy Container
-            GestureDetector(
-              onTap: () {
-                _showPrivacyPolicy(context);
-              },
-              child: Container(
-                padding: EdgeInsets.all(16),
-                margin: EdgeInsets.only(bottom: 10),
-                decoration: BoxDecoration(
-                  color: Colors.blueAccent,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 5)],
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.policy, color: Colors.white),
-                    SizedBox(width: 10),
-                    Text('Privacy Policy',
-                        style: TextStyle(color: Colors.white, fontSize: 16)),
-                  ],
-                ),
-              ),
+    return Stack(
+      children: [
+        buildBackground(context),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            automaticallyImplyLeading: false,
+            title: Text(
+              'Settings',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 40,
+                  fontFamily: "Ingrid"),
             ),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Privacy Policy Container
+                GestureDetector(
+                  onTap: _launchUrl,
+                  child: Container(
+                    padding: EdgeInsets.all(16),
+                    margin: EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.blueAccent,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(color: Colors.black26, blurRadius: 5)
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.policy, color: Colors.white),
+                        SizedBox(width: 10),
+                        Text('Privacy Policy',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 16)),
+                      ],
+                    ),
+                  ),
+                ),
 
-            // Terms of Service Container
-            GestureDetector(
-              onTap: () {
-                _showTermsOfService(context);
-              },
-              child: Container(
-                padding: EdgeInsets.all(16),
-                margin: EdgeInsets.only(bottom: 10),
-                decoration: BoxDecoration(
-                  color: Colors.greenAccent,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 5)],
+                // Terms of Service Container
+                GestureDetector(
+                  onTap: _launchUrl,
+                  child: Container(
+                    padding: EdgeInsets.all(16),
+                    margin: EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.greenAccent,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(color: Colors.black26, blurRadius: 5)
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.gavel, color: Colors.white),
+                        SizedBox(width: 10),
+                        Text('Terms of Service',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 16)),
+                      ],
+                    ),
+                  ),
                 ),
-                child: Row(
-                  children: [
-                    Icon(Icons.gavel, color: Colors.white),
-                    SizedBox(width: 10),
-                    Text('Terms of Service',
-                        style: TextStyle(color: Colors.white, fontSize: 16)),
-                  ],
-                ),
-              ),
-            ),
 
-            // Rate Us Container
-            GestureDetector(
-              onTap: () {
-                _rateUs(context);
-              },
-              child: Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.orangeAccent,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 5)],
+                // Rate Us Container
+                GestureDetector(
+                  onTap: _rateApp,
+                  child: Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.orangeAccent,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(color: Colors.black26, blurRadius: 5)
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.star_rate, color: Colors.white),
+                        SizedBox(width: 10),
+                        Text('Rate Us',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 16)),
+                      ],
+                    ),
+                  ),
                 ),
-                child: Row(
-                  children: [
-                    Icon(Icons.star_rate, color: Colors.white),
-                    SizedBox(width: 10),
-                    Text('Rate Us',
-                        style: TextStyle(color: Colors.white, fontSize: 16)),
-                  ],
-                ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -162,51 +198,6 @@ class SettingsPage extends StatelessWidget {
   }
 
   // Function to show the Terms of Service dialog (example)
-  void _showTermsOfService(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Terms of Service'),
-          content: Text('Here you can place your Terms of Service details.'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Close'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   // Function to show the Rate Us dialog (example)
-  void _rateUs(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Rate Us'),
-          content: Text('Would you like to rate our app?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                // In a real app, this could link to the app store
-              },
-              child: Text('Yes'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('No'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 }
